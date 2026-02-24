@@ -2,11 +2,10 @@ import java.util.ArrayList;
 
 public class Hand {
     
-    public ArrayList<Card> hand = new ArrayList<>();
+    private ArrayList<Card> hand = new ArrayList<>();
 
     public Hand()
     {
-        hand=null;
     }
 
     public void addCard(Card card)
@@ -14,8 +13,49 @@ public class Hand {
         hand.add(card);
     }
 
-    public int getValue()
+    public int getTotal()
     {
-        for(Card)
+        int totalVal = 0;
+        int ace = 0;
+        for( int i=0; i<hand.size(); i++)
+        {
+            if(hand.get(i).getValue()==11)
+            {
+                ace++;
+            }
+            totalVal+=hand.get(i).getValue();
+        }
+        while(ace>0 && totalVal>21)
+        {
+            ace--;
+            totalVal-=10;
+        }
+        return totalVal;
     }
+
+    public boolean isBust()
+    {
+        return (getTotal()>21);
+    }
+
+    public String toString()
+    {
+        String mainString = "";
+
+        if(hand.isEmpty())
+        {
+            mainString = "Empty Hand!";
+        }
+        else{         
+            for(int i = 0; i<hand.size(); i++)
+            {
+                mainString+= hand.get(i).toString();
+            }
+            mainString+= " | " + getTotal();
+        }
+
+        return mainString;
+    }
+
+
 }

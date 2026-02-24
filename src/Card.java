@@ -17,7 +17,7 @@ public class Card {
 
     public String toString()
     {
-        return (rank + " of " + suit);
+        return ("『" + rank + suit.getSuit() + "』");
     }
 }
 
