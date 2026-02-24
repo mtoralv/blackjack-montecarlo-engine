@@ -24,5 +24,7 @@
 ### What's next (Really short-term)
 - Build `Card.java` — first real class with fields, constructor, and methods
 - Build `Deck.java` and `Hand.java`
+- Configure the readme file [Temporal]
 
 ---
+
