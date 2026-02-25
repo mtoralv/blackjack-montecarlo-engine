@@ -62,5 +62,10 @@ public class Hand {
         hand.clear();
     }
 
+    public boolean isBlackjack()
+    {
+        return(hand.size()==2 && this.getTotal()==21);
+    }
+
 
 }
