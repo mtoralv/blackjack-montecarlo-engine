@@ -1,11 +1,11 @@
 public class Player {
 
     private int balance;
-    private Hand hand;
+    private Hand hand = new Hand();
 
-    public Player()
+    public Player(int initialBalance)
     {
-        balance = 100;
+        balance = initialBalance;
     }
 
     public int getBalance()
@@ -17,5 +17,19 @@ public class Player {
     {
         balance+=change;
     }
-    
+
+    public Hand getHand()
+    {
+        return hand;
+    }
+
+    public void resetHand()
+    {
+        hand.resetHand();
+    }
+
+    public void addCard(Card card)
+    {
+        hand.addCard(card);;
+    }  
 }

@@ -57,5 +57,10 @@ public class Hand {
         return mainString;
     }
 
+    public void resetHand()
+    {
+        hand.clear();
+    }
+
 
 }
