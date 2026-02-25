@@ -1,6 +1,6 @@
 public class Player {
 
-    private int balance;
+    private double balance;
     private Hand hand = new Hand();
 
     public Player(int initialBalance)
@@ -8,12 +8,12 @@ public class Player {
         balance = initialBalance;
     }
 
-    public int getBalance()
+    public double getBalance()
     {
         return this.balance;
     }
 
-    public void changeBalance(int change)
+    public void changeBalance(double change)
     {
         balance+=change;
     }
