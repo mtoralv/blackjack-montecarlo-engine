@@ -66,6 +66,11 @@ public class Hand {
     {
         return(hand.size()==2 && this.getTotal()==21);
     }
+    
+    public Card getFirstCard()
+    {
+        return hand.getFirst();
+    }
 
 
 }
