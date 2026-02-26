@@ -4,6 +4,7 @@
 - [Day 1 — Project Setup & First Java Files](#day-1)
 - [Day 2 — Complete Data Model](#day-2)
 - [Day 3 — Game Logic & Display](#day-3)
+- [Day 4 — Polished Game and cleaned code](#day-4)
 
 ---
 
@@ -93,6 +94,7 @@
 ### What I built
 - Created a `run.bat` file to auto-compile and run the code so it's easier
 - Created a `bin` dir to store the .class files
+- Started to add color to the game
 
 ### What's next
 - Basic Strategy solver, Monte Carlo simulator, Hi-Lo comparison among other methods
@@ -100,5 +102,6 @@
 - Change project name to support the Montecarlo simulator part
 
 ---
+
 
 
