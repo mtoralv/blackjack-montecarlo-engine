@@ -1,6 +1,6 @@
 
 enum Suit {
-    Hearts("♥"), Diamonds("♦"), Clubs("♣"), Spades("♠");
+    Hearts("H"), Diamonds("D"), Clubs("C"), Spades("S");
 
     private String suit;
     Suit(String suit)
