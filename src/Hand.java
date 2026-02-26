@@ -51,9 +51,9 @@ public class Hand {
             {
                 mainString+= hand.get(i).toString();
             }
-            mainString+= " | " + getTotal();
+            mainString+= " | " + Colors.RED + " [" + getTotal() + "]" + Colors.RESET;
         }
-
+        
         return mainString;
     }
 

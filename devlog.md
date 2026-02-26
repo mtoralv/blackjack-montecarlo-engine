@@ -87,5 +87,20 @@
 
 ---
 
+## Day 2: Polished the final Game part and cleaned the code <a name="day-4"></a>
+**Date:** February 26, 2026
 
+### What I built
+- Created a `run.bat` file to auto-compile and run the code so it's easier
+- Created a `bin` dir to store the .class files
+
+### What I learned
+- 
+
+### What's next
+- Basic Strategy solver, Monte Carlo simulator, Hi-Lo comparison among other methods
+- Configure the readme file [Temporal] to support the Montecarlo simulator part
+- Change project name to support the Montecarlo simulator part
+
+---
 

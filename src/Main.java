@@ -31,7 +31,8 @@ public class Main {
         }
         else
         {
-            game.clearScreen(false);
+            game.clearScreen();
+            game.header(false);
             System.out.println("Thanks for playing!");
         }
     }   

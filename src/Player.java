@@ -5,7 +5,7 @@ public class Player {
 
     public Player(int initialBalance)
     {
-        balance = initialBalance;
+        this.balance = initialBalance;
     }
 
     public double getBalance()

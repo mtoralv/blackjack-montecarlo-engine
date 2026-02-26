@@ -19,7 +19,63 @@ public class Game {
         this.dealer= new Hand();
     }
 
-    public void initialDeal()
+    public void round()
+    {
+        clearScreen();
+        header(false);
+        do 
+        {
+            System.out.print("Set a bet (0-" + player.getBalance() + "): ");
+            try {
+                setBet(scanner.nextDouble());
+                scanner.nextLine();
+            }
+            catch (Exception e) {
+                clearScreen();
+                header(true);
+                scanner.nextLine();
+                setBet(0);
+            }
+        } 
+        while(this.bet < 1 || this.bet > player.getBalance());
+
+        initialDeal();
+        System.out.println("Dealing cards...");
+        currentState(true);
+        
+        boolean resolved = playerTurn();
+        if(!resolved)
+        {
+            dealerTurn();
+            determineWinner();
+        }
+        System.out.println("Press Enter to continue...");
+        scanner.nextLine();
+        player.resetHand();
+        dealer.resetHand();
+    }
+
+    public void clearScreen()
+    {
+        System.out.print(Colors.BG_DGREEN);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public void header(boolean start)
+    {
+        System.out.println(Colors.YELLOW + " |--------------------------| " );
+        System.out.println( " |          CASINO          | " );
+        System.out.println(" |--------------------------| " + Colors.RESET);
+        System.out.println();
+        if(start)
+        {
+            System.out.println("Chips: " + Colors.GREEN + player.getBalance() + Colors.RESET + "        Bet: " + Colors.YELLOW + this.bet + Colors.RESET);
+            System.out.println();
+        }
+    }
+
+    private void initialDeal()
     {
         deck.shuffle();
         for(int i=0;i<2;i++)
@@ -32,7 +88,7 @@ public class Game {
         }
     }
 
-    public boolean playerTurn()
+    private boolean playerTurn()
     {
         if(player.getHand().isBlackjack())
         {
@@ -63,7 +119,7 @@ public class Game {
         return false;
     }
 
-    public void dealerTurn()
+    private void dealerTurn()
     {
         while(dealer.getTotal()<DEALER_STAND)
         {
@@ -72,7 +128,7 @@ public class Game {
         }
     }
 
-    public void determineWinner()
+    private void determineWinner()
     {
         if(player.getHand().isBlackjack() && !dealer.isBlackjack())
         {
@@ -106,64 +162,15 @@ public class Game {
         }
     }
 
-    public void setBet(double bet)
+    private void setBet(double bet)
     {
         this.bet = bet;
     }
 
-    public void clearScreen(boolean start)
-{
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-        System.out.println(Colors.YELLOW + " |--------------------------| " );
-        System.out.println( " |          CASINO          | " );
-        System.out.println(" |--------------------------| " + Colors.RESET);
-        System.out.println();
-        if(start)
-        {
-            System.out.println("Chips: " + Colors.GREEN + player.getBalance() + Colors.RESET + "        Bet: " + Colors.YELLOW + this.bet + Colors.RESET);
-            System.out.println();
-        }
-
-    }
-
-    public void round()
+    private void currentState(boolean hideDealer)
     {
-        clearScreen(false);
-        do 
-        {
-            System.out.print("Set a bet (0-" + player.getBalance() + "): ");
-            try {
-                setBet(scanner.nextDouble());
-                scanner.nextLine();
-            }
-            catch (Exception e) {
-                clearScreen(true);
-                scanner.nextLine();
-                setBet(0);
-            }
-        } 
-        while(this.bet < 1 || this.bet > player.getBalance());
-
-        initialDeal();
-        System.out.println("Dealing cards...");
-        currentState(true);
-        
-        boolean resolved = playerTurn();
-        if(!resolved)
-        {
-            dealerTurn();
-            determineWinner();
-        }
-        System.out.println("Press Enter to continue...");
-        scanner.nextLine();
-        player.resetHand();
-        dealer.resetHand();
-    }
-
-    public void currentState(boolean hideDealer)
-    {
-        clearScreen(true);
+        clearScreen();
+        header(true);
         System.out.print( Colors.YELLOW + "DEALER     " + Colors.RESET );
         if(hideDealer)
         {
