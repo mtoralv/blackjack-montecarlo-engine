@@ -3,6 +3,7 @@
 ## Index
 - [Day 1 — Project Setup & First Java Files](#day-1)
 - [Day 2 — Complete Data Model](#day-2)
+- [Day 3 — Game Logic & Display](#day-3)
 
 ---
 
@@ -56,5 +57,35 @@
 - Configure the readme file [Temporal]
 
 ---
+
+## Day 3: Game Logic & Display <a name="day-3"></a>
+**Date:** February 25, 2026
+
+### What I built
+- Completed `Game.java`; full round logic with betting, player turn, dealer turn, winner detection
+- Added `Colors.java`; ANSI color constants for terminal display
+- Improved `clearScreen()`; now shows casino header, chips, and bet
+- Added `currentState()`; redraws game state with hidden/revealed dealer card
+- Added `getFirstCard()` to `Hand.java`  for hiding dealer's second card
+- Added `isBlackjack()` to `Hand.java`; checks for exactly two cards totalling 21
+- Added `resetHand()` to `Hand.java`; clears hand between rounds
+- Completed `Main.java`; game loop with play again prompt
+
+### What I learned
+- Resource leaks — Scanner must be closed, like fclose() in C
+
+### Decisions made
+- `bet` defaults to 10% of balance — works for both human and Monte Carlo
+- `silent` mode planned for Monte Carlo — skip all print statements when simulating
+
+### What's next
+- Add pause after round result so player can read outcome
+- Polish display and test edge cases
+- Polish game logic 
+- Fix various errors (Dealer doesn't deal for themselves, among others)
+- Plan basic strategy solver
+
+---
+
 
 
