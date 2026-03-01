@@ -40,7 +40,7 @@ public class Hand {
 
     public String toString()
     {
-        String mainString = "";
+        String mainString = "     ";
 
         if(hand.isEmpty())
         {
@@ -51,7 +51,7 @@ public class Hand {
             {
                 mainString+= hand.get(i).toString();
             }
-            mainString+= " | " + Colors.RED + " [" + getTotal() + "]" + Colors.RESET;
+            mainString+= "  |  " + Colors.RED + getTotal() + Colors.RESET;
         }
         
         return mainString;

@@ -9,7 +9,7 @@ public class Game {
     private Deck deck;
     private Player player;
     private Hand dealer;
-    private double bet;
+    private int bet;
 
     public Game( Player player)
     {
@@ -27,7 +27,7 @@ public class Game {
         {
             System.out.print("Set a bet (0-" + player.getBalance() + "): ");
             try {
-                setBet(scanner.nextDouble());
+                setBet(scanner.nextInt());
                 scanner.nextLine();
             }
             catch (Exception e) {
@@ -57,7 +57,6 @@ public class Game {
 
     public void clearScreen()
     {
-        System.out.print(Colors.BG_DGREEN);
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
@@ -74,6 +73,21 @@ public class Game {
             System.out.println();
         }
     }
+
+public boolean askAnother()
+{
+    while(true)
+    {
+        System.out.print("Play another round? (y/n): ");
+
+        String ans = scanner.nextLine().toLowerCase();
+
+        if(ans.equals("y")) return true;
+        else if(ans.equals("n")) return false;
+
+        else System.out.println("Invalid input. Enter y or n.");
+    }
+}
 
     private void initialDeal()
     {
@@ -110,6 +124,10 @@ public class Game {
             {
                 player.addCard(deck.deal());
                 currentState(true);
+                if(player.getHand().getTotal()==21)
+                {
+                    playerStand = true;
+                }
             }
             else
             {
@@ -132,8 +150,8 @@ public class Game {
     {
         if(player.getHand().isBlackjack() && !dealer.isBlackjack())
         {
-            player.changeBalance(bet*1.5);
-            System.out.println("Blackjack! ( +"+ bet*1.5 + "$ )");
+            player.changeBalance(bet * 3 / 2);
+            System.out.println("Blackjack! ( +"+ bet*3/2 + "$ )");
         }
         else if(player.getHand().isBust())
         {
@@ -162,7 +180,7 @@ public class Game {
         }
     }
 
-    private void setBet(double bet)
+    private void setBet(int bet)
     {
         this.bet = bet;
     }
@@ -171,10 +189,10 @@ public class Game {
     {
         clearScreen();
         header(true);
-        System.out.print( Colors.YELLOW + "DEALER     " + Colors.RESET );
+        System.out.print( Colors.YELLOW + "DEALER" + Colors.RESET );
         if(hideDealer)
         {
-            System.out.println(dealer.getFirstCard().toString() + " | ??");
+            System.out.println( "     " + dealer.getFirstCard().toString() + Colors.MAGENTA + "[??]" + Colors.RESET + "  |  " + Colors.RED + "??" + Colors.RESET);
         }
         else
         {
@@ -183,5 +201,8 @@ public class Game {
         System.out.println(Colors.WHITE + " ---------------------------- " + Colors.RESET);
         System.out.println("Your hand:");
         System.out.println(player.getHand().toString());
+        System.out.println();
     }
+
+
 }

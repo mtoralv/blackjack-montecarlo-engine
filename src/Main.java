@@ -12,16 +12,9 @@ public class Main {
         while(player.getBalance()>0 && continueGame)
         { 
             game.round();
-
-            System.out.println("Do you want to play another round? (y/n): ");
-            String ans = scanner.nextLine();
-            if(ans.toLowerCase().equals("y"))
+            if(player.getBalance()>0)
             {
-                continueGame=true;
-            }
-            else if(ans.toLowerCase().equals("n"))
-            {
-                continueGame=false;
+                continueGame=game.askAnother();
             }
         }
         scanner.close();
