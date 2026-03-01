@@ -4,7 +4,7 @@ public class Game {
     
     private static final int DEALER_STAND = 17;
 
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     private boolean silent = false;
 
@@ -12,6 +12,7 @@ public class Game {
     private Player player;
     private Hand dealer;
     private int bet;
+    private Strategy strategy;
 
     public Game( Player player)
     {
@@ -68,6 +69,11 @@ public class Game {
 
         player.resetHand();
         dealer.resetHand();
+    }
+
+    public void setStrategy(Strategy strategy)
+    {
+        this.strategy = strategy;
     }
 
     public void clearScreen()
@@ -133,11 +139,17 @@ public class Game {
         boolean playerStand=false;
         while(!player.getHand().isBust() && !playerStand)
         {
+            String input;
             if(!silent)
             {
                 System.out.print("(h)it or (s)tand: ");
-                String input = scanner.nextLine();
-
+                input = scanner.nextLine();
+            }
+            else
+            {
+                input = strategy.decide(player.getHand(), dealer.getFirstCard());
+            }
+            
             if(input.toLowerCase().equals("s"))
             {
                 playerStand=true;
@@ -145,7 +157,7 @@ public class Game {
             else if(input.toLowerCase().equals("h"))
             {
                 player.addCard(deck.deal());
-                currentState(true);
+                if(!silent) currentState(true);
                 if(player.getHand().getTotal()==21)
                 {
                     playerStand = true;
@@ -153,10 +165,8 @@ public class Game {
             }
             else
             {
-                currentState(true);
+                if(!silent) currentState(true);
             }
-            }
-
             
         }
         return false;

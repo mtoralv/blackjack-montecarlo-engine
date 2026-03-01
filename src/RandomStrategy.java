@@ -1,0 +1,16 @@
+
+public class RandomStrategy implements Strategy {
+    public String decide(Hand playerHand, Card dealerUpcard) {
+    
+        if(Math.random() < 0.5) 
+        {
+            return "h";
+        }
+        else 
+        {
+            return "s";
+        }
+    
+    }
+}
+
