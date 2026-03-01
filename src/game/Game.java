@@ -1,4 +1,8 @@
+package game;
+
 import java.util.Scanner;
+import strategy.*;
+import util.Colors; 
 
 public class Game {
     

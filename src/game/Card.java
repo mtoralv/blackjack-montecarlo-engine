@@ -1,3 +1,6 @@
+package game;
+
+import util.Colors;
 
 public class Card {
 

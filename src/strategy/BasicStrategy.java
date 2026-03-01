@@ -1,3 +1,7 @@
+package strategy;
+
+import game.Hand;
+import game.Card;
 
 public class BasicStrategy implements Strategy {
     public String decide(Hand playerHand, Card dealerUpcard) {
