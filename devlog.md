@@ -95,6 +95,9 @@
 - Created a `run.bat` file to auto-compile and run the code so it's easier
 - Created a `bin` dir to store the .class files
 - Started to add color to the game
+- Changed balance to int
+- Moved another round logic
+- Auto stand on 21
 
 ### What's next
 - Basic Strategy solver, Monte Carlo simulator, Hi-Lo comparison among other methods

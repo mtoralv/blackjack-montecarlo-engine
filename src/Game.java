@@ -6,6 +6,8 @@ public class Game {
 
     Scanner scanner = new Scanner(System.in);
 
+    private boolean silent = false;
+
     private Deck deck;
     private Player player;
     private Hand dealer;
@@ -21,27 +23,35 @@ public class Game {
 
     public void round()
     {
-        clearScreen();
-        header(false);
-        do 
-        {
-            System.out.print("Set a bet (0-" + player.getBalance() + "): ");
-            try {
-                setBet(scanner.nextInt());
-                scanner.nextLine();
-            }
-            catch (Exception e) {
-                clearScreen();
-                header(true);
-                scanner.nextLine();
-                setBet(0);
-            }
-        } 
-        while(this.bet < 1 || this.bet > player.getBalance());
+        if(!silent)
+        { 
+            clearScreen();
+            header(false);
+            do 
+            {
+                System.out.print("Set a bet (0-" + player.getBalance() + "): ");
+                try {
+                    setBet(scanner.nextInt());
+                    scanner.nextLine();
+                }
+                catch (Exception e) {
+                    clearScreen();
+                    header(true);
+                    scanner.nextLine();
+                    setBet(0);
+                }
+            } 
+            while(this.bet < 1 || this.bet > player.getBalance());
+        }
 
         initialDeal();
-        System.out.println("Dealing cards...");
-        currentState(true);
+
+        if(!silent)
+        {
+            System.out.println("Dealing cards...");
+            currentState(true);
+        }
+
         
         boolean resolved = playerTurn();
         if(!resolved)
@@ -49,8 +59,13 @@ public class Game {
             dealerTurn();
             determineWinner();
         }
-        System.out.println("Press Enter to continue...");
-        scanner.nextLine();
+
+        if(!silent)
+        {
+                    System.out.println("Press Enter to continue...");
+                    scanner.nextLine();
+        }
+
         player.resetHand();
         dealer.resetHand();
     }
@@ -74,20 +89,25 @@ public class Game {
         }
     }
 
-public boolean askAnother()
-{
-    while(true)
+    public boolean askAnother()
     {
-        System.out.print("Play another round? (y/n): ");
+        while(true)
+        {
+            System.out.print("Play another round? (y/n): ");
 
-        String ans = scanner.nextLine().toLowerCase();
+            String ans = scanner.nextLine().toLowerCase();
 
-        if(ans.equals("y")) return true;
-        else if(ans.equals("n")) return false;
+            if(ans.equals("y")) return true;
+            else if(ans.equals("n")) return false;
 
-        else System.out.println("Invalid input. Enter y or n.");
+            else System.out.println("Invalid input. Enter y or n.");
+        }
     }
-}
+
+    public void setSilent(boolean silent)
+    {
+        this.silent = silent;   
+    }
 
     private void initialDeal()
     {
@@ -113,8 +133,10 @@ public boolean askAnother()
         boolean playerStand=false;
         while(!player.getHand().isBust() && !playerStand)
         {
-            System.out.print("(h)it or (s)tand: ");
-            String input = scanner.nextLine();
+            if(!silent)
+            {
+                System.out.print("(h)it or (s)tand: ");
+                String input = scanner.nextLine();
 
             if(input.toLowerCase().equals("s"))
             {
@@ -133,6 +155,9 @@ public boolean askAnother()
             {
                 currentState(true);
             }
+            }
+
+            
         }
         return false;
     }
@@ -142,7 +167,7 @@ public boolean askAnother()
         while(dealer.getTotal()<DEALER_STAND)
         {
             dealer.addCard(deck.deal());
-            currentState(false);
+            if(!silent)currentState(false);
         }
     }
 
@@ -151,36 +176,36 @@ public boolean askAnother()
         if(player.getHand().isBlackjack() && !dealer.isBlackjack())
         {
             player.changeBalance(bet * 3 / 2);
-            System.out.println("Blackjack! ( +"+ bet*3/2 + "$ )");
+            if(!silent)System.out.println("Blackjack! ( +"+ bet*3/2 + "$ )");
         }
         else if(player.getHand().isBust())
         {
             player.changeBalance(-bet);
-            System.out.println("House wins! ( -"+ bet + "$ )");
+            if(!silent)System.out.println("House wins! ( -"+ bet + "$ )");
         }
         else if(dealer.isBust())
         {
             player.changeBalance(+bet);
-            System.out.println("Player wins! ( +" + bet + "$ )");
+            if(!silent)System.out.println("Player wins! ( +" + bet + "$ )");
         }
         else if(player.getHand().getTotal()==dealer.getTotal())
         {
             player.changeBalance(0);
-            System.out.println("Tie! ( Bet returned )");
+            if(!silent)System.out.println("Tie! ( Bet returned )");
         }
         else if(player.getHand().getTotal()>dealer.getTotal())
         {
             player.changeBalance(+bet);
-            System.out.println("Player wins! ( +" + bet + "$ )");  
+            if(!silent)System.out.println("Player wins! ( +" + bet + "$ )");  
         }
         else
         {
             player.changeBalance(-bet);
-            System.out.println("House wins! ( -"+ bet + "$ )");    
+            if(!silent)System.out.println("House wins! ( -"+ bet + "$ )");    
         }
     }
 
-    private void setBet(int bet)
+    public void setBet(int bet)
     {
         this.bet = bet;
     }
