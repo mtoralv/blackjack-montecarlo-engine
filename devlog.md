@@ -5,6 +5,7 @@
 - [Day 2 — Complete Data Model](#day-2)
 - [Day 3 — Game Logic & Display](#day-3)
 - [Day 4 — Polished Game and cleaned code](#day-4)
+- [Day 5 — Monte Carlo Simulator](#day-5)
 
 ---
 
@@ -105,6 +106,34 @@
 - Change project name to support the Montecarlo simulator part
 
 ---
+
+## Day 5: Monte Carlo Simulator <a name="day-5"></a>
+**Date:** March 1, 2026
+
+### What I built
+- Created `Strategy.java`; interface defining the decision contract
+- Created `RandomStrategy.java`; first strategy implementation, decides randomly
+- Created `BasicStrategy.java`; simple strategy, stands at 17+ (Subject to inmediate change)
+- Created `MonteCarlo.java`; full simulation engine with balance history tracking
+- Connected strategy pattern to `Game.java` with silent mode + strategy field
+
+### Results so far
+| Strategy | Win Rate | House Edge |
+|----------|----------|------------|
+| Random   | ~32%     | ~29%       |
+| Basic    | ~42%     | ~4%        |
+
+### What's next
+- Debug why BasicStrategy players go broke too fast
+- Implement full basic strategy lookup table
+- Add HiLo strategy among others
+- Build exportCSV() for Python visualization
+- Plot balance trajectories in Python
+- Add Javadoc comments to all classes
+- Update README with run instructions
+
+---
+
 
 
 
