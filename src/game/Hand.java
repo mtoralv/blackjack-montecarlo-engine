@@ -16,6 +16,11 @@ public class Hand {
         hand.add(card);
     }
 
+    public int getSize()
+    {
+        return hand.size();
+    }
+
     public int getTotal()
     {
         int totalVal = 0;

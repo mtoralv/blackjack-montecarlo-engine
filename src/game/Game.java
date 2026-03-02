@@ -150,12 +150,23 @@ public class Game {
             String input;
             if(!silent)
             {
-                System.out.print("(h)it or (s)tand: ");
+                System.out.print("(h) Hit, (s) Stand, (d) Double Down, (r) Surrender: ");
                 input = scanner.nextLine();
             }
             else
             {
                 input = strategy.decide(player.getHand(), dealer.getFirstCard());
+            }
+
+            if(input.equals("d") && this.bet*2 > player.getBalance())
+            {
+                if(!silent) System.out.println("Insuficient funds!! Hitting automatically");
+                input = "h";
+            }
+            else if(input.equals("r") && player.getHand().getSize() == 2)
+            {
+                if(!silent) System.out.println("Can' surrender when dealt card!! Standing automatically");
+                input = "s";
             }
             
             if(input.toLowerCase().equals("s"))
@@ -170,6 +181,20 @@ public class Game {
                 {
                     playerStand = true;
                 }
+            }
+            else if(input.toLowerCase().equals("r"))
+            {
+
+                player.changeBalance(-bet/2);
+                return true;
+        
+            }
+            else if(input.toLowerCase().equals("d"))
+            {
+                player.addCard(deck.deal());
+                this.bet += this.bet;
+                playerStand = true;
+                if(!silent) currentState(false);
             }
             else
             {

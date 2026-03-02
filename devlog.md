@@ -123,6 +123,8 @@
 | Random   | ~32%     | ~29%       |
 | Basic    | ~42%     | ~4%        |
 
+(This data for Basic strategy is wrong) [Importat change]
+
 ### What's next
 - Debug why BasicStrategy players go broke too fast
 - Implement full basic strategy lookup table
