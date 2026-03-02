@@ -119,6 +119,11 @@ public class Game {
         this.silent = silent;   
     }
 
+    public boolean getSilent()
+    {
+        return silent;
+    }
+
     private void initialDeal()
     {
         deck.shuffle();

@@ -16,8 +16,6 @@ public class Deck {
     {
         if(deck.isEmpty())
         {
-            System.out.println("ERROR, empty Deck");
-            System.out.println("Getting new Deck and reshuffling...");
             newDeck();
             shuffle();
         }
