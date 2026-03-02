@@ -8,6 +8,8 @@ import strategy.ThresholdStrategy;
 import strategy.RandomStrategy;
 import strategy.BasicStrategy;
 import strategy.HiLoStrategy;
+import strategy.OnlyHit;
+import strategy.OnlyStand;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,33 +24,41 @@ public class Main {
         random.simulate();
         random.printResults();
 
-
         System.out.println();
-
 
         System.out.println("Theshold strat: ");
         MonteCarlo threshold = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new ThresholdStrategy());
         threshold.simulate();
         threshold.printResults();
-
         
         System.out.println();
-
 
         System.out.println("Basic strat: ");
         MonteCarlo basic = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new BasicStrategy());
         basic.simulate();
         basic.printResults();
 
-        
         System.out.println();
 
-/*
+        System.out.println("OnlyHit strat: ");
+        MonteCarlo Hit = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new OnlyHit());
+        Hit.simulate();
+        Hit.printResults();
+
+        System.out.println();
+
+        System.out.println("OnlyStand strat: ");
+        MonteCarlo Stand = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new OnlyStand());
+        Stand.simulate();
+        Stand.printResults();
+
+        System.out.println();
+
         System.out.println("HiLo strat: ");
         MonteCarlo HiLo = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new HiLoStrategy());
         HiLo.simulate();
         HiLo.printResults();
-*/
+
 
 
 

@@ -21,6 +21,8 @@ public class MonteCarlo {
     private int totalHands;
     private int totalWagered;
     private int netProfit;
+    private int totalSurrender;
+    private int totalDoubleDown;
 
     public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, Strategy strategy)
     {
@@ -72,6 +74,24 @@ public class MonteCarlo {
                         totalBlackjacks++;
                         totalWins++;
                     }
+                    else if(player.getBalance() == prevBalance - newBetSize/2)
+                    {
+                        totalSurrender++;
+                        totalLosses++;
+                    }
+                    else if(player.getBalance() == prevBalance + newBetSize*2 || player.getBalance() == prevBalance - newBetSize*2)
+                    {
+                        totalWagered += newBetSize;
+                        totalDoubleDown++;
+                        if(prevBalance < player.getBalance())
+                        {
+                            totalWins++;
+                        }
+                        else if( prevBalance > player.getBalance())
+                        {
+                            totalLosses++;
+                        }
+                    }
                     else if(prevBalance < player.getBalance())
                     {
                         totalWins++;
@@ -80,6 +100,7 @@ public class MonteCarlo {
                     {
                         totalLosses++;
                     }
+
                 }
                     simulation.add(player.getBalance());
             }
@@ -102,6 +123,8 @@ public class MonteCarlo {
         System.out.println("Total looses: " + this.totalLosses);
         System.out.println("Total ties: " + this.totalTies);
         System.out.println("Total blackjacks: " + this.totalBlackjacks);
+        System.out.println("Total surrender: " + this.totalSurrender);
+        System.out.println("Total double down: " + this.totalDoubleDown);
         System.out.printf("Win rate: %.3f%%%n", winRate);
         System.out.printf("House edge: %.3f%%%n", houseEdge);
 

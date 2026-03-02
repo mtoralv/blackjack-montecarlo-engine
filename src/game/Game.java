@@ -163,9 +163,9 @@ public class Game {
                 if(!silent) System.out.println("Insuficient funds!! Hitting automatically");
                 input = "h";
             }
-            else if(input.equals("r") && player.getHand().getSize() == 2)
+            else if(input.equals("r") && player.getHand().getSize() != 2)
             {
-                if(!silent) System.out.println("Can' surrender when dealt card!! Standing automatically");
+                if(!silent) System.out.println("Can't surrender when dealt card!! Standing automatically");
                 input = "s";
             }
             
