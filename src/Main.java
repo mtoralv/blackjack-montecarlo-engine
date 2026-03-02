@@ -4,21 +4,55 @@ import java.util.Scanner;
 import game.Game;
 */
 import simulation.MonteCarlo;
-import strategy.BasicStrategy;
+import strategy.ThresholdStrategy;
 import strategy.RandomStrategy;
+import strategy.BasicStrategy;
+import strategy.HiLoStrategy;
 
 public class Main {
     public static void main(String[] args) {
 
+        int numSimulations = 10;
+        int handsPerSimulation = 1000000;
+        int betSize = 10;
+        int startingBalance = betSize*handsPerSimulation + 1000000;
+
         System.out.println("Random strat: ");
-        MonteCarlo mc = new MonteCarlo(100, 1000000, 5000, 10, new RandomStrategy());
-        mc.simulate();
-        mc.printResults();
+        MonteCarlo random = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new RandomStrategy());
+        random.simulate();
+        random.printResults();
+
+
         System.out.println();
+
+
+        System.out.println("Theshold strat: ");
+        MonteCarlo threshold = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new ThresholdStrategy());
+        threshold.simulate();
+        threshold.printResults();
+
+        
+        System.out.println();
+
+
         System.out.println("Basic strat: ");
-        MonteCarlo basic = new MonteCarlo(100, 1000000, 5000, 10, new BasicStrategy());
+        MonteCarlo basic = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new BasicStrategy());
         basic.simulate();
         basic.printResults();
+
+        
+        System.out.println();
+
+/*
+        System.out.println("HiLo strat: ");
+        MonteCarlo HiLo = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new HiLoStrategy());
+        HiLo.simulate();
+        HiLo.printResults();
+*/
+
+
+
+
         /* 
         Player player = new Player(500);
 
