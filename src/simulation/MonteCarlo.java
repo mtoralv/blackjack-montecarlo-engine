@@ -20,6 +20,7 @@ public class MonteCarlo {
     private int totalBlackjacks;
     private int totalHands;
     private int totalWagered;
+    private int netProfit;
 
     public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, Strategy strategy)
     {
@@ -42,10 +43,13 @@ public class MonteCarlo {
             Game game = new Game(player);
             game.setSilent(true);
             game.setStrategy(strategy);
-            game.setBet(betSize);
             
             for(int j=0; j < handsPerSimulation ; j++)
             {
+            
+                int newBetSize = Math.min(betSize, player.getBalance());
+                game.setBet(newBetSize);
+                
                 if(player.getBalance()==0)
                 {
                     break;
@@ -54,13 +58,16 @@ public class MonteCarlo {
                 {
                     int prevBalance = player.getBalance();
                     game.round(); 
+
+                    netProfit += player.getBalance() - prevBalance;
+
                     totalHands++;
-                    totalWagered += betSize;
+                    totalWagered += newBetSize;
                     if(prevBalance == player.getBalance())
                     {
                         totalTies++;
                     }
-                    else if(player.getBalance() - prevBalance == betSize * 3 / 2)
+                    else if(player.getBalance() - prevBalance == newBetSize * 3 / 2)
                     {
                         totalBlackjacks++;
                         totalWins++;
@@ -74,7 +81,7 @@ public class MonteCarlo {
                         totalLosses++;
                     }
                 }
-                simulation.add(player.getBalance());
+                    simulation.add(player.getBalance());
             }
             balanceHistory.add(simulation);
         }
@@ -87,8 +94,6 @@ public class MonteCarlo {
     
     public void printResults()
     {
-        int regularWins = totalWins - totalBlackjacks;
-        int netProfit = (regularWins * betSize) + (totalBlackjacks * betSize * 3 / 2) - (totalLosses * betSize);
         double houseEdge = -(double) netProfit / totalWagered * 100;
         double winRate = (double) totalWins / totalHands * 100;
 
@@ -97,8 +102,8 @@ public class MonteCarlo {
         System.out.println("Total looses: " + this.totalLosses);
         System.out.println("Total ties: " + this.totalTies);
         System.out.println("Total blackjacks: " + this.totalBlackjacks);
-        System.out.printf("Win rate: %.2f%%%n", winRate);
-        System.out.printf("House edge: %.2f%%%n", houseEdge);
+        System.out.printf("Win rate: %.3f%%%n", winRate);
+        System.out.printf("House edge: %.3f%%%n", houseEdge);
 
     }
     

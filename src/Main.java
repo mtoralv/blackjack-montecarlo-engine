@@ -1,20 +1,22 @@
+/*
 import java.util.Scanner;
-import game.Player;
+//import game.Player;
+import game.Game;
+*/
 import simulation.MonteCarlo;
 import strategy.BasicStrategy;
 import strategy.RandomStrategy;
-import game.Game;
 
 public class Main {
     public static void main(String[] args) {
 
         System.out.println("Random strat: ");
-        MonteCarlo mc = new MonteCarlo(10, 100000, 500, 10, new RandomStrategy());
+        MonteCarlo mc = new MonteCarlo(100, 1000000, 5000, 10, new RandomStrategy());
         mc.simulate();
         mc.printResults();
         System.out.println();
         System.out.println("Basic strat: ");
-        MonteCarlo basic = new MonteCarlo(10, 100000, 500, 10, new BasicStrategy());
+        MonteCarlo basic = new MonteCarlo(100, 1000000, 5000, 10, new BasicStrategy());
         basic.simulate();
         basic.printResults();
         /* 

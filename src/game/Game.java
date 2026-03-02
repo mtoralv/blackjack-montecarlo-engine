@@ -21,7 +21,6 @@ public class Game {
     public Game( Player player)
     {
         this.player = player;
-        this.bet = player.getBalance()/10;
         this.deck = new Deck();
         this.dealer= new Hand();
     }
