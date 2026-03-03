@@ -68,7 +68,7 @@ public class Main {
 
     public static void testStrategy(Strategy strategy)
     {
-        int numSimulations = 100;
+        int numSimulations = 1000;
         int handsPerSimulation = 100000;
         int betSize = 10;
         int startingBalance = betSize*handsPerSimulation*10;
