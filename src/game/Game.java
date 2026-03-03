@@ -150,7 +150,7 @@ public class Game {
             String input;
             if(!silent)
             {
-                System.out.print("(h) Hit, (s) Stand, (d) Double Down, (r) Surrender: ");
+                System.out.print("(h) Hit, (s) Stand, (d) Double Down, (r) Surrender, (ds) Double Stand: ");
                 input = scanner.nextLine();
             }
             else
@@ -162,6 +162,15 @@ public class Game {
             {
                 if(!silent) System.out.println("Insuficient funds!! Hitting automatically");
                 input = "h";
+            }
+            else if(input.equals("ds") && this.bet*2 > player.getBalance())
+            {
+                if(!silent) System.out.println("Can't double!! Standing automatically");
+                input = "s";
+            }
+            else if(input.equals("ds") && this.bet*2 <= player.getBalance())
+            {
+                input = "d";
             }
             else if(input.equals("r") && player.getHand().getSize() != 2)
             {

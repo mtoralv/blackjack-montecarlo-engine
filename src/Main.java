@@ -6,6 +6,7 @@ import game.Game;
 import simulation.MonteCarlo;
 import strategy.ThresholdStrategy;
 import strategy.RandomStrategy;
+import strategy.Strategy;
 import strategy.BasicStrategy;
 import strategy.HiLoStrategy;
 import strategy.OnlyHit;
@@ -14,54 +15,22 @@ import strategy.OnlyStand;
 public class Main {
     public static void main(String[] args) {
 
-        int numSimulations = 10;
-        int handsPerSimulation = 1000000;
-        int betSize = 10;
-        int startingBalance = betSize*handsPerSimulation*2;
+        testStrategy(new RandomStrategy());
 
-        System.out.println("Random strat: ");
-        MonteCarlo random = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new RandomStrategy());
-        random.simulate();
-        random.printResults();
-        random.exportCSV();
 
-        System.out.println();
+        testStrategy(new ThresholdStrategy());
 
-        System.out.println("Theshold strat: ");
-        MonteCarlo threshold = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new ThresholdStrategy());
-        threshold.simulate();
-        threshold.printResults();
+
+        testStrategy(new OnlyHit());
+
+
+        testStrategy(new OnlyStand());
+
+
+        testStrategy(new BasicStrategy());
         
-        System.out.println();
 
-        System.out.println("Basic strat: ");
-        MonteCarlo basic = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new BasicStrategy());
-        basic.simulate();
-        basic.printResults();
-
-        System.out.println();
-
-        System.out.println("OnlyHit strat: ");
-        MonteCarlo Hit = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new OnlyHit());
-        Hit.simulate();
-        Hit.printResults();
-
-        System.out.println();
-
-        System.out.println("OnlyStand strat: ");
-        MonteCarlo Stand = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new OnlyStand());
-        Stand.simulate();
-        Stand.printResults();
-
-        System.out.println();
-
-        System.out.println("HiLo strat: ");
-        MonteCarlo HiLo = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new HiLoStrategy());
-        HiLo.simulate();
-        HiLo.printResults();
-
-
-
+        testStrategy(new HiLoStrategy());
 
 
         /* 
@@ -95,4 +64,20 @@ public class Main {
 
 
     }   
+
+    public static void testStrategy(Strategy strategy)
+    {
+        int numSimulations = 10;
+        int handsPerSimulation = 1000000;
+        int betSize = 10;
+        int startingBalance = betSize*handsPerSimulation*2;
+
+        String name = strategy.getName();
+        System.out.println(name + ": ");
+        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, strategy);
+        strat.simulate();
+        strat.printResults();
+        strat.exportCSV();
+        System.out.println();
+    }
 }

@@ -55,22 +55,7 @@ public class BasicStrategy implements Strategy {
             
         }
 
-        /*
-        DISCLAIMER; This is a temporal fix due to main.java not supporting d, ds and r at the moment;
-        conversion table shown -->
-        DS → "s"         
-        */
-
-        if(BasicStratTable[row][col].equals("ds"))
-        {
-            return "s";
-        }
-        else
-        {
-            return BasicStratTable[row][col];
-        }
-
-        // end of disclaimer part
+        return BasicStratTable[row][col];
 
     }
     
