@@ -141,30 +141,25 @@ public class MonteCarlo {
         return numDecks;
     }
     
-    public void exportCSV()    
-    {
-        try {
+
+    public void exportCSV() {
+    try {
         FileWriter writer = new FileWriter("CSVresults/" + strategy.getName() + "_exportedCSV.csv");
-        StringBuilder csv = new StringBuilder("");
         
-        for(int i=0; i < getnetProfitHistory().size() ; i++)
-        {
-            for(int j=0; j < getnetProfitHistory().get(i).size(); j++)
-            {
-                csv.append(netProfitHistory.get(i).get(j) + ","); 
+        for (int i = 0; i < getnetProfitHistory().size(); i++) {
+            for (int j = 0; j < getnetProfitHistory().get(i).size(); j++) {
+                writer.write(getnetProfitHistory().get(i).get(j) + ",");
             }
-            csv.append("\n");
+            writer.write("\n");
         }
-        String writecsv = csv.toString(); 
-        writer.write(writecsv);
 
         writer.close();
         System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
+    } catch (IOException e) {
         System.out.println("An error occurred.");
         e.printStackTrace();
-        }
     }
+}
 
 
 
