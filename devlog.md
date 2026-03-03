@@ -7,6 +7,7 @@
 - [Day 4 — Polished Game and cleaned code](#day-4)
 - [Day 5 — Monte Carlo Simulator](#day-5)
 - [Day 6 — Bug Fixes, Full Basic Strategy & CSV Export](#day-6)
+- [Day 7 — HiLo Card Counting, Multi-Deck Support & Python Visualization](#day-7)
 
 ---
 
@@ -164,6 +165,51 @@
 - Add table bet limits
 - Plot balance trajectories in Python
 - Update README with run instructions
+
+---
+
+## Day 7: HiLo Card Counting, Multi-Deck Support & Python Visualization <a name="day-7"></a>
+**Date:** March 3, 2026
+
+### What I built
+- Fixed DS fallback in `BasicStrategy`; now correctly returns "d" instead of "s"
+- Added `seeCard()` and `resetCount()` default methods to `Strategy` interface
+- Added `getBet()` default method to `Strategy` interface; HiLo overrides it, others return baseBet unchanged
+- Implemented `HiLoStrategy`; tracks running count, calculates true count, scales bet 1-to-12
+- Fixed hole card visibility; dealer's second card is only counted when revealed in `dealerTurn()`
+- Added deck reshuffle detection in `Deck.java`; `Game.java` calls `strategy.resetCount()` automatically
+- Added multi-deck support to `Deck.java`; defaults to 6 decks, configurable via constructor
+- Added `numDecks` parameter to `Game.java` and `MonteCarlo.java`
+- Replaced `StringBuilder` CSV export with `BufferedWriter`; fixes OutOfMemoryError on large simulations
+- Added `testStrategy()` helper to `Main.java`; clean polymorphic testing of any strategy
+- Set up Python Jupyter Notebook (`blackjack_analysis.ipynb`) with pandas and matplotlib
+- Built comparison graph of all strategies and spaghetti graph for variance visualization
+- Added `.venv/` to `.gitignore`
+
+### Results
+| Strategy       | Win Rate | House Edge |
+|----------------|----------|------------|
+| Random         | ~32%     | ~29.6%     |
+| Threshold      | ~41%     | ~5.4%      |
+| Basic Strategy | ~42%     | ~0.57%     |
+| Only Hit       | ~16%     | ~63.8%     |
+| Only Stand     | ~38%     | ~16.0%     |
+| HiLo           | ~42%     | ~-0.87%    |
+
+### Known limitations / TODO
+- `numDecks` hardcoded in `HiLoStrategy`; needs fixing tomorrow
+- `requirements.txt` not yet committed
+- README not yet written
+- HiLo architecture is a design smell; betting logic should be a separate `BettingStrategy` interface
+
+### What's next
+- Fix hardcoded `numDecks` in `HiLoStrategy`
+- Write `README.md`
+- Commit `requirements.txt`
+- Implement betting systems: Martingale, Oscar's Grind, 1-3-2-6
+- Implement split
+- Add table bet limits
+
 
 
 
