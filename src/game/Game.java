@@ -128,11 +128,17 @@ public class Game {
         deck.shuffle();
         for(int i=0;i<2;i++)
         {
-            dealer.addCard(deck.deal());
+            Card card = deck.deal();
+            if(deck.isReshuffled()) strategy.resetCount();
+            dealer.addCard(card);
+            if(i==0)strategy.seeCard(card);
         }
         for(int i=0;i<2;i++)
         {
-            player.addCard(deck.deal());
+            Card card = deck.deal();
+            if(deck.isReshuffled()) strategy.resetCount();
+            player.addCard(card);
+            strategy.seeCard(card);
         }
     }
 
@@ -184,7 +190,10 @@ public class Game {
             }
             else if(input.toLowerCase().equals("h"))
             {
-                player.addCard(deck.deal());
+                Card card = deck.deal();
+                if(deck.isReshuffled()) strategy.resetCount();
+                player.addCard(card);
+                strategy.seeCard(card);
                 if(!silent) currentState(true);
                 if(player.getHand().getTotal()==21)
                 {
@@ -200,7 +209,10 @@ public class Game {
             }
             else if(input.toLowerCase().equals("d"))
             {
-                player.addCard(deck.deal());
+                Card card = deck.deal();
+                if(deck.isReshuffled()) strategy.resetCount();
+                player.addCard(card);
+                strategy.seeCard(card);
                 this.bet += this.bet;
                 playerStand = true;
                 if(!silent) currentState(false);
@@ -216,9 +228,13 @@ public class Game {
 
     private void dealerTurn()
     {
+        strategy.seeCard(dealer.getCard(1));
         while(dealer.getTotal()<DEALER_STAND)
         {
-            dealer.addCard(deck.deal());
+            Card card = deck.deal();
+            if(deck.isReshuffled()) strategy.resetCount();
+            dealer.addCard(card);
+            strategy.seeCard(card);
             if(!silent)currentState(false);
         }
     }
