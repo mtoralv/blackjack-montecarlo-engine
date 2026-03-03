@@ -18,10 +18,10 @@ public class Game {
     private int bet;
     private Strategy strategy;
 
-    public Game( Player player)
+    public Game( Player player, int numDecks)
     {
         this.player = player;
-        this.deck = new Deck();
+        this.deck = new Deck(numDecks);
         this.dealer= new Hand();
     }
 

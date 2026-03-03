@@ -71,10 +71,11 @@ public class Main {
         int handsPerSimulation = 1000000;
         int betSize = 10;
         int startingBalance = betSize*handsPerSimulation*2;
+        int numDecks = 6;
 
         String name = strategy.getName();
         System.out.println(name + ": ");
-        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, strategy);
+        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks ,strategy);
         strat.simulate();
         strat.printResults();
         strat.exportCSV();

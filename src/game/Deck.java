@@ -9,8 +9,9 @@ public class Deck {
     private int numDecks=6;
     private ArrayList<Card> deck = new ArrayList<>();
 
-    public Deck()
+    public Deck(int numDecks)
     {
+        this.numDecks = numDecks;
         newDeck(numDecks);
     }
 

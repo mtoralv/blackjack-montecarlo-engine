@@ -25,13 +25,15 @@ public class MonteCarlo {
     private int netProfit;
     private int totalSurrender;
     private int totalDoubleDown;
+    private int numDecks;
 
-    public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, Strategy strategy)
+    public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, int numDecks, Strategy strategy)
     {
         this.numSimulations = numSimulations;
         this.handsPerSimulation = handsPerSimulation;
         this.startingBalance = startingBalance;
         this.betSize = betSize;
+        this.numDecks = numDecks;
         this.strategy = strategy;
         this.netProfitHistory = new ArrayList<>();
     }
@@ -43,7 +45,7 @@ public class MonteCarlo {
 
             ArrayList<Integer> simulation = new ArrayList<>();
             Player player = new Player(startingBalance);
-            Game game = new Game(player);
+            Game game = new Game(player, numDecks );
             game.setSilent(true);
             game.setStrategy(strategy);
             int simNetProfit = 0;
