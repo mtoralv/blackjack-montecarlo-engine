@@ -54,7 +54,7 @@ public class MonteCarlo {
             for(int j=0; j < handsPerSimulation ; j++)
             {
             
-                int newBetSize = Math.min(betSize, player.getBalance());
+                int newBetSize = Math.min(strategy.getBet(betSize), player.getBalance());
                 game.setBet(newBetSize);
                 
                 if(player.getBalance()==0)
@@ -135,8 +135,13 @@ public class MonteCarlo {
         System.out.printf("House edge: %.3f%%%n", houseEdge);
 
     }
+
+    public int getNumDecks()
+    {
+        return numDecks;
+    }
     
-public void exportCSV()    
+    public void exportCSV()    
     {
         try {
         FileWriter writer = new FileWriter("CSVresults/" + strategy.getName() + "_exportedCSV.csv");
@@ -160,6 +165,7 @@ public void exportCSV()
         e.printStackTrace();
         }
     }
+
 
 
     

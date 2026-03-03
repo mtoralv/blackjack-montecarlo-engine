@@ -14,6 +14,10 @@ import strategy.OnlyStand;
 
 public class Main {
     public static void main(String[] args) {
+        
+
+        testStrategy(new HiLoStrategy(6)); // this is hardcoded; must change when possible
+
 
         testStrategy(new RandomStrategy());
 
@@ -29,9 +33,6 @@ public class Main {
 
         testStrategy(new BasicStrategy());
         
-
-        testStrategy(new HiLoStrategy());
-
 
         /* 
         Player player = new Player(500);
@@ -67,15 +68,15 @@ public class Main {
 
     public static void testStrategy(Strategy strategy)
     {
-        int numSimulations = 10;
-        int handsPerSimulation = 1000000;
+        int numSimulations = 100;
+        int handsPerSimulation = 100000;
         int betSize = 10;
-        int startingBalance = betSize*handsPerSimulation*2;
+        int startingBalance = betSize*handsPerSimulation*10;
         int numDecks = 6;
 
         String name = strategy.getName();
         System.out.println(name + ": ");
-        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks ,strategy);
+        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks , strategy);
         strat.simulate();
         strat.printResults();
         strat.exportCSV();

@@ -12,4 +12,8 @@ public interface Strategy {
     default void resetCount() 
     {
     }
+    default int getBet(int baseBet) 
+    {
+        return baseBet;
+    }   
 }
