@@ -73,4 +73,10 @@ public class BasicStrategy implements Strategy {
         // end of disclaimer part
 
     }
+    
+    public String getName()
+    {
+        return "BasicStrategy";
+    }
+
 }

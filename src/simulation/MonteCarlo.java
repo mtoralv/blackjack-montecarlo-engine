@@ -1,5 +1,7 @@
 package simulation;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import game.Game;
@@ -13,7 +15,7 @@ public class MonteCarlo {
     private int startingBalance;
     private int betSize;
     private Strategy strategy;
-    private ArrayList<ArrayList<Integer>> balanceHistory;
+    private ArrayList<ArrayList<Integer>> netProfitHistory;
     private int totalWins;
     private int totalLosses;
     private int totalTies;
@@ -31,7 +33,7 @@ public class MonteCarlo {
         this.startingBalance = startingBalance;
         this.betSize = betSize;
         this.strategy = strategy;
-        this.balanceHistory = new ArrayList<>();
+        this.netProfitHistory = new ArrayList<>();
     }
 
     public void simulate()
@@ -40,11 +42,12 @@ public class MonteCarlo {
         {
 
             ArrayList<Integer> simulation = new ArrayList<>();
-            simulation.add(startingBalance);
             Player player = new Player(startingBalance);
             Game game = new Game(player);
             game.setSilent(true);
             game.setStrategy(strategy);
+            int simNetProfit = 0;
+            simulation.add(0);
             
             for(int j=0; j < handsPerSimulation ; j++)
             {
@@ -101,16 +104,17 @@ public class MonteCarlo {
                         totalLosses++;
                     }
 
-                }
-                    simulation.add(player.getBalance());
+                    simNetProfit += player.getBalance() - prevBalance;
+                    simulation.add(simNetProfit);
+                }    
             }
-            balanceHistory.add(simulation);
+            netProfitHistory.add(simulation);
         }
     }
 
-    public ArrayList<ArrayList<Integer>> getBalanceHistory()
+    public ArrayList<ArrayList<Integer>> getnetProfitHistory()
     {
-        return balanceHistory;
+        return netProfitHistory;
     }
     
     public void printResults()
@@ -130,9 +134,29 @@ public class MonteCarlo {
 
     }
     
-    public void exportCSV()
+public void exportCSV()    
     {
+        try {
+        FileWriter writer = new FileWriter(strategy.getName() + "_exportedCSV.txt");
+        StringBuilder csv = new StringBuilder("");
+        
+        for(int i=0; i < getnetProfitHistory().size() ; i++)
+        {
+            for(int j=0; j < getnetProfitHistory().get(i).size(); j++)
+            {
+                csv.append(netProfitHistory.get(i).get(j) + ","); 
+            }
+            csv.append("\n");
+        }
+        String writecsv = csv.toString(); 
+        writer.write(writecsv);
 
+        writer.close();
+        System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+        System.out.println("An error occurred.");
+        e.printStackTrace();
+        }
     }
     
 }

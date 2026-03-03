@@ -16,4 +16,9 @@ public class ThresholdStrategy implements Strategy {
         }
     
     }
+    
+    public String getName()
+    {
+        return "ThresholdStrategy";
+    }
 }

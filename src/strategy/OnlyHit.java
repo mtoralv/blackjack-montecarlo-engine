@@ -8,5 +8,9 @@ public class OnlyHit implements Strategy {
         return "h";
     }
 
+    public String getName()
+    {
+        return "OnlyHitStrategy";
+    }
     
 }

@@ -16,5 +16,10 @@ public class RandomStrategy implements Strategy {
         }
     
     }
+
+    public String getName()
+    {
+        return "RandomStrategy";
+    }
 }
 

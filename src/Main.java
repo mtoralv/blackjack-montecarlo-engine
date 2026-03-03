@@ -17,12 +17,13 @@ public class Main {
         int numSimulations = 10;
         int handsPerSimulation = 1000000;
         int betSize = 10;
-        int startingBalance = betSize*handsPerSimulation + 1000000;
+        int startingBalance = betSize*handsPerSimulation*2;
 
         System.out.println("Random strat: ");
         MonteCarlo random = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, new RandomStrategy());
         random.simulate();
         random.printResults();
+        random.exportCSV();
 
         System.out.println();
 

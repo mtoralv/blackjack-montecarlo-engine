@@ -9,5 +9,10 @@ public class HiLoStrategy implements Strategy {
         return "s";
     }
 
+    public String getName()
+    {
+        return "HiLoStrategy";
+    }
+
     
 }

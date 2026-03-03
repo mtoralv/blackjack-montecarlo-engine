@@ -8,5 +8,10 @@ public class OnlyStand implements Strategy {
         return "s";
     }
 
+    public String getName()
+    {
+        return "OnlyStandStrategy";
+    }
+
     
 }
