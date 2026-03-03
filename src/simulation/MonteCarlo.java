@@ -137,7 +137,7 @@ public class MonteCarlo {
 public void exportCSV()    
     {
         try {
-        FileWriter writer = new FileWriter(strategy.getName() + "_exportedCSV.txt");
+        FileWriter writer = new FileWriter("CSVresults/" + strategy.getName() + "_exportedCSV.csv");
         StringBuilder csv = new StringBuilder("");
         
         for(int i=0; i < getnetProfitHistory().size() ; i++)
