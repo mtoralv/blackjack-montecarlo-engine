@@ -6,6 +6,7 @@
 - [Day 3 — Game Logic & Display](#day-3)
 - [Day 4 — Polished Game and cleaned code](#day-4)
 - [Day 5 — Monte Carlo Simulator](#day-5)
+- [Day 6 — Bug Fixes, Full Basic Strategy & CSV Export](#day-6)
 
 ---
 
@@ -16,14 +17,6 @@
 - Created GitHub repository and set up project structure
 - Created `Suit.java`; a clean enum representing the 4 card suits
 - Created `Rank.java`; an enum where each rank carries its Blackjack value
-
-### What I learned
-- What enums are: a fixed set of named values, perfect when options never change
-- What fields are; variables that belong to an object
-- That Java enums are actually objects; they can hold data and constructors just like classes
-- Java naming conventions: classes start Uppercase, fields and variables start lowercase
-- Thinking of a field and constructor like a locker: the field is the locker, the constructor puts something inside it at creation
-- Enum values act as a bijection; each name maps to exactly one value
 
 ### What's next (Really short-term)
 - Build `Card.java`; first real class with fields, constructor, and methods
@@ -42,10 +35,6 @@
 - Completed `Deck.java`; builds 52 cards, newDeck(), deal(), shuffle(), size()
 - Completed `Hand.java`; addCard(), getTotal() with Ace logic, isBust(), toString()
 - Started `Player.java`; balance field, getBalance(), changeBalance()
-
-### What I learned
-- Encapsulation: private fields with public getters
-- Separation of concerns: Hand holds cards, Game coordinates between objects
 
 ### Decisions made
 - Created Player class to hold balance and hand; cleaner for Monte Carlo later
@@ -72,9 +61,6 @@
 - Added `isBlackjack()` to `Hand.java`; checks for exactly two cards totalling 21
 - Added `resetHand()` to `Hand.java`; clears hand between rounds
 - Completed `Main.java`; game loop with play again prompt
-
-### What I learned
-- Resource leaks — Scanner must be closed, like fclose() in C
 
 ### Decisions made
 - `bet` defaults to 10% of balance — works for both human and Monte Carlo
@@ -135,6 +121,50 @@
 - Update README with run instructions
 
 ---
+
+## Day 6: Bug Fixes, Full Basic Strategy & CSV Export <a name="day-6"></a>
+**Date:** March 2, 2026
+
+### What I built
+- Fixed critical bankruptcy bug in `MonteCarlo.java`; bet was set once at construction and never updated, causing players to bet more than their balance mid-simulation
+- Fixed `Game.java` constructor; removed default bet of `balance/10` that was overriding the simulation's bet size
+- Implemented `Math.min(betSize, player.getBalance())` as a clean local bet cap per hand
+- Implemented full Basic Strategy lookup table (19×10) based on standard 4/6/8 deck chart
+- Added `isSoft()` to `Hand.java`; correctly detects soft hands accounting for Ace conversion
+- Added double down to `Game.java`; doubles bet, deals exactly one card, auto-stands
+- Added surrender to `Game.java`; loses half the bet, ends round immediately, restricted to first two cards only
+- Added `getName()` to `Strategy` interface; each strategy knows its own name
+- Renamed old BasicStrategy to `ThresholdStrategy`
+- Added `OnlyHitStrategy` and `OnlyStandStrategy` as experimental baselines
+- Implemented `exportCSV()` in `MonteCarlo.java`; exports net profit history per simulation to `CSVresults/<StrategyName>.csv`
+- Added `StringBuilder` for efficient string building in CSV export
+- Added `CSVresults/` folder with `.gitkeep`; added `*.csv` to `.gitignore`
+- Switched balance history to net profit history; all simulations must start at (0,0)
+
+### Results
+| Strategy       | Win Rate | House Edge |
+|----------------|----------|------------|
+| Random         | ~32%     | ~29%       |
+| Threshold      | ~41%     | ~5.3%      |
+| Basic Strategy | ~42%     | ~0.22%     |
+| Only Hit       | ~16%     | ~63%       |
+| Only Stand     | ~38%     | ~15%       |
+
+### Known limitations / TODO
+- DS (double or stand) fallback still returns "s" instead of "d"; needs fixing
+- Single deck without reshuffling affects card counting accuracy; must look into this
+- Split not yet implemented — would push house edge closer to the theoretical 0.5% it should have
+- HiLo strategy not yet implemented
+
+### What's next
+- Implement HiLo card counting strategy
+- Python visualization of CSV data
+- Add more betting systems (Martingale, Oscar's Grind, 1-3-2-6)
+- Add multi-deck support before card counting strategies
+- Add table bet limits
+- Plot balance trajectories in Python
+- Update README with run instructions
+
 
 
 
