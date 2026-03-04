@@ -1,2 +1,2 @@
 # blackjack-java
-Terminal-based Blackjack game in Java. Built from scratch to learn OOP, with plans to add a basic strategy solver and Monte Carlo simulator.
+A high-performance Monte Carlo simulation engine for the stochastic analysis and optimization of Blackjack decision matrices.
