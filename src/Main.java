@@ -13,10 +13,18 @@ import strategy.OnlyHit;
 import strategy.OnlyStand;
 
 public class Main {
+
+    private static final int numSimulations = 1000;
+    private static final int handsPerSimulation = 100000;
+    private static final int betSize = 10;
+    private static final int startingBalance = betSize*handsPerSimulation*10;
+    private static final int numDecks = 6;
+    
     public static void main(String[] args) {
         
 
-        testStrategy(new HiLoStrategy(6)); // this is hardcoded; must change when possible
+        // card counting strategies need the numdecks parameter; might fix later with a config file
+        testStrategy(new HiLoStrategy(numDecks));
 
 
         testStrategy(new RandomStrategy());
@@ -68,12 +76,6 @@ public class Main {
 
     public static void testStrategy(Strategy strategy)
     {
-        int numSimulations = 1000;
-        int handsPerSimulation = 100000;
-        int betSize = 10;
-        int startingBalance = betSize*handsPerSimulation*10;
-        int numDecks = 6;
-
         String name = strategy.getName();
         System.out.println(name + ": ");
         MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks , strategy);
