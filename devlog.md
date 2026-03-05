@@ -8,7 +8,8 @@
 - [Day 5 — Monte Carlo Simulator](#day-5)
 - [Day 6 — Bug Fixes, Full Basic Strategy & CSV Export](#day-6)
 - [Day 7 — HiLo Card Counting, Multi-Deck Support & Python Visualization](#day-7)
-
+- [Day 8 — BettingStrategy Refactor & Architecture Cleanup](#day-8)
+  
 ---
 
 ## Day 1: Project Setup & First Java Files <a name="day-1"></a>
@@ -208,7 +209,39 @@
 - Commit `requirements.txt`
 - Implement betting systems: Martingale, Oscar's Grind, 1-3-2-6
 - Implement split
-- Add table bet limits
+- Add table bet limits 
+
+---
+
+## Day 8: BettingStrategy Refactor & Architecture Cleanup <a name="day-8"></a>
+**Date:** March 5, 2026
+
+### What I built
+- Fixed hardcoded `numDecks` in `HiLoStrategy`; moved all simulation parameters to static finals in `Main.java`
+- Created `BettingStrategy` interface in `strategy/bettingStrategy/` with `getBet()`, `seeCard()`, `resetCount()`, `getName()` default methods
+- Created `PlayingStrategy` interface in `strategy/playingStrategy/` replacing old `Strategy` interface
+- Split `HiLoStrategy` into `HiLoBettingStrategy` (card counting, bet sizing) and kept `BasicStrategy` as pure playing strategy
+- Created `BaseBet` — default flat betting strategy, returns base bet unchanged
+- Removed `seeCard()` and `resetCount()` from `PlayingStrategy`; they belong to `BettingStrategy` only
+- Added `setPlayingStrategy()` and `setBettingStrategy()` setters to `Game.java`
+- Updated `MonteCarlo.java` constructor to accept both `PlayingStrategy` and `BettingStrategy` separately
+- Updated `run.bat` to compile new subpackage directories
+- Added `requirements.txt` with minimal dependencies
+
+### Known limitations / TODO
+- `roundResult()` not yet in `BettingStrategy` — needed for Martingale and other reactive betting systems
+- Martingale, Oscar's Grind, 1-3-2-6 not yet implemented
+- Search for more strategies and betting strategies to implement
+- Table bet limits not yet implemented
+- Write `README.md`
+
+### What's next
+- Add `roundResult(boolean win)` to `BettingStrategy`
+- Implement Martingale betting system
+- Implement split
+- Implement table bet limits
+- Implement Oscar's Grind and 1-3-2-6
+
 
 
 
