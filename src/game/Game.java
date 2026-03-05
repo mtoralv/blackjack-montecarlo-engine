@@ -1,7 +1,8 @@
 package game;
 
 import java.util.Scanner;
-import strategy.*;
+import strategy.playingStrategy.PlayingStrategy;
+import strategy.bettingStrategy.BettingStrategy;
 import util.Colors; 
 
 public class Game {
@@ -16,7 +17,8 @@ public class Game {
     private Player player;
     private Hand dealer;
     private int bet;
-    private Strategy strategy;
+    private PlayingStrategy playingStrategy;
+    private BettingStrategy bettingStrategy;
 
     public Game( Player player, int numDecks)
     {
@@ -74,9 +76,14 @@ public class Game {
         dealer.resetHand();
     }
 
-    public void setStrategy(Strategy strategy)
+    public void setPlayingStrategy(PlayingStrategy playingStrategy)
     {
-        this.strategy = strategy;
+        this.playingStrategy = playingStrategy;
+    }
+
+    public void setBettingStrategy(BettingStrategy bettingStrategy)
+    {
+        this.bettingStrategy = bettingStrategy;
     }
 
     public void clearScreen()
@@ -129,16 +136,16 @@ public class Game {
         for(int i=0;i<2;i++)
         {
             Card card = deck.deal();
-            if(deck.isReshuffled()) strategy.resetCount();
+            if(deck.isReshuffled()) bettingStrategy.resetCount();
             dealer.addCard(card);
-            if(i==0)strategy.seeCard(card);
+            if(i==0) bettingStrategy.seeCard(card);
         }
         for(int i=0;i<2;i++)
         {
             Card card = deck.deal();
-            if(deck.isReshuffled()) strategy.resetCount();
+            if(deck.isReshuffled()) bettingStrategy.resetCount();
             player.addCard(card);
-            strategy.seeCard(card);
+            bettingStrategy.seeCard(card);
         }
     }
 
@@ -161,7 +168,7 @@ public class Game {
             }
             else
             {
-                input = strategy.decide(player.getHand(), dealer.getFirstCard());
+                input = playingStrategy.decide(player.getHand(), dealer.getFirstCard());
             }
 
             if(input.equals("d") && this.bet*2 > player.getBalance())
@@ -191,9 +198,9 @@ public class Game {
             else if(input.toLowerCase().equals("h"))
             {
                 Card card = deck.deal();
-                if(deck.isReshuffled()) strategy.resetCount();
+                if(deck.isReshuffled()) bettingStrategy.resetCount();
                 player.addCard(card);
-                strategy.seeCard(card);
+                bettingStrategy.seeCard(card);
                 if(!silent) currentState(true);
                 if(player.getHand().getTotal()==21)
                 {
@@ -210,9 +217,9 @@ public class Game {
             else if(input.toLowerCase().equals("d"))
             {
                 Card card = deck.deal();
-                if(deck.isReshuffled()) strategy.resetCount();
+                if(deck.isReshuffled()) bettingStrategy.resetCount();
                 player.addCard(card);
-                strategy.seeCard(card);
+                bettingStrategy.seeCard(card);
                 this.bet += this.bet;
                 playerStand = true;
                 if(!silent) currentState(false);
@@ -228,13 +235,13 @@ public class Game {
 
     private void dealerTurn()
     {
-        strategy.seeCard(dealer.getCard(1));
+        bettingStrategy.seeCard(dealer.getCard(1));
         while(dealer.getTotal()<DEALER_STAND)
         {
             Card card = deck.deal();
-            if(deck.isReshuffled()) strategy.resetCount();
+            if(deck.isReshuffled()) bettingStrategy.resetCount();
             dealer.addCard(card);
-            strategy.seeCard(card);
+            bettingStrategy.seeCard(card);
             if(!silent)currentState(false);
         }
     }

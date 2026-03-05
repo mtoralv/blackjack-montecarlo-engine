@@ -4,17 +4,12 @@ import java.util.Scanner;
 import game.Game;
 */
 import simulation.MonteCarlo;
-import strategy.playingStrategy.BasicStrategy;
-import strategy.playingStrategy.HiLoStrategy;
-import strategy.playingStrategy.OnlyHit;
-import strategy.playingStrategy.OnlyStand;
-import strategy.playingStrategy.RandomStrategy;
-import strategy.playingStrategy.PlayingStrategy;
-import strategy.playingStrategy.ThresholdStrategy;
+import strategy.playingStrategy.*;
+import strategy.bettingStrategy.*;;
 
 public class Main {
 
-    private static final int numSimulations = 1000;
+    private static final int numSimulations = 10;
     private static final int handsPerSimulation = 100000;
     private static final int betSize = 10;
     private static final int startingBalance = betSize*handsPerSimulation*10;
@@ -24,22 +19,21 @@ public class Main {
         
 
         // card counting strategies need the numdecks parameter; might fix later with a config file
-        testStrategy(new HiLoStrategy(numDecks));
+        testStrategy(new BasicStrategy(), new HiLoStrategy(6));
+
+        testStrategy(new BasicStrategy(), new BaseBet());
+
+        testStrategy(new RandomStrategy(), new BaseBet());
 
 
-        testStrategy(new RandomStrategy());
+        testStrategy(new ThresholdStrategy(), new BaseBet());
 
 
-        testStrategy(new ThresholdStrategy());
+        testStrategy(new OnlyHit(), new BaseBet());
 
 
-        testStrategy(new OnlyHit());
+        testStrategy(new OnlyStand(), new BaseBet());
 
-
-        testStrategy(new OnlyStand());
-
-
-        testStrategy(new BasicStrategy());
         
 
         /* 
@@ -74,11 +68,12 @@ public class Main {
 
     }   
 
-    public static void testStrategy(PlayingStrategy strategy)
+    public static void testStrategy(PlayingStrategy playingStrategy, BettingStrategy bettingStrategy)
     {
-        String name = strategy.getName();
-        System.out.println(name + ": ");
-        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks , strategy);
+        String playingName = playingStrategy.getName();
+        String bettingName = bettingStrategy.getName();
+        System.out.println(playingName + " " + bettingName + ": ");
+        MonteCarlo strat = new MonteCarlo(numSimulations, handsPerSimulation, startingBalance, betSize, numDecks , playingStrategy , bettingStrategy);
         strat.simulate();
         strat.printResults();
         strat.exportCSV();

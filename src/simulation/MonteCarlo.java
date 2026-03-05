@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 import game.Game;
 import game.Player;
-import strategy.Strategy;
+import strategy.bettingStrategy.BettingStrategy;
+import strategy.playingStrategy.PlayingStrategy;
 
 public class MonteCarlo {
 
@@ -14,7 +15,8 @@ public class MonteCarlo {
     private int handsPerSimulation;
     private int startingBalance;
     private int betSize;
-    private Strategy strategy;
+    private PlayingStrategy playingStrategy;
+    private BettingStrategy bettingStrategy;
     private ArrayList<ArrayList<Integer>> netProfitHistory;
     private int totalWins;
     private int totalLosses;
@@ -27,14 +29,15 @@ public class MonteCarlo {
     private int totalDoubleDown;
     private int numDecks;
 
-    public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, int numDecks, Strategy strategy)
+    public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, int numDecks, PlayingStrategy playingStrategy, BettingStrategy bettingStrategy)
     {
         this.numSimulations = numSimulations;
         this.handsPerSimulation = handsPerSimulation;
         this.startingBalance = startingBalance;
         this.betSize = betSize;
         this.numDecks = numDecks;
-        this.strategy = strategy;
+        this.playingStrategy = playingStrategy;
+        this.bettingStrategy = bettingStrategy;
         this.netProfitHistory = new ArrayList<>();
     }
 
@@ -47,14 +50,15 @@ public class MonteCarlo {
             Player player = new Player(startingBalance);
             Game game = new Game(player, numDecks );
             game.setSilent(true);
-            game.setStrategy(strategy);
+            game.setPlayingStrategy(playingStrategy);
+            game.setBettingStrategy(bettingStrategy);
             int simNetProfit = 0;
             simulation.add(0);
             
             for(int j=0; j < handsPerSimulation ; j++)
             {
             
-                int newBetSize = Math.min(strategy.getBet(betSize), player.getBalance());
+                int newBetSize = Math.min(bettingStrategy.getBet(betSize), player.getBalance());
                 game.setBet(newBetSize);
                 
                 if(player.getBalance()==0)
@@ -144,7 +148,7 @@ public class MonteCarlo {
 
     public void exportCSV() {
     try {
-        FileWriter writer = new FileWriter("CSVresults/" + strategy.getName() + "_exportedCSV.csv");
+        FileWriter writer = new FileWriter("CSVresults/" + playingStrategy.getName() + "+" + bettingStrategy.getName() + "_exportedCSV.csv");
         
         for (int i = 0; i < getnetProfitHistory().size(); i++) {
             for (int j = 0; j < getnetProfitHistory().get(i).size(); j++) {
@@ -161,7 +165,4 @@ public class MonteCarlo {
     }
 }
 
-
-
-    
 }
