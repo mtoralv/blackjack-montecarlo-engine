@@ -4,13 +4,13 @@ import java.util.Scanner;
 import game.Game;
 */
 import simulation.MonteCarlo;
-import strategy.ThresholdStrategy;
-import strategy.RandomStrategy;
-import strategy.Strategy;
-import strategy.BasicStrategy;
-import strategy.HiLoStrategy;
-import strategy.OnlyHit;
-import strategy.OnlyStand;
+import strategy.playingStrategy.BasicStrategy;
+import strategy.playingStrategy.HiLoStrategy;
+import strategy.playingStrategy.OnlyHit;
+import strategy.playingStrategy.OnlyStand;
+import strategy.playingStrategy.RandomStrategy;
+import strategy.playingStrategy.PlayingStrategy;
+import strategy.playingStrategy.ThresholdStrategy;
 
 public class Main {
 
@@ -74,7 +74,7 @@ public class Main {
 
     }   
 
-    public static void testStrategy(Strategy strategy)
+    public static void testStrategy(PlayingStrategy strategy)
     {
         String name = strategy.getName();
         System.out.println(name + ": ");

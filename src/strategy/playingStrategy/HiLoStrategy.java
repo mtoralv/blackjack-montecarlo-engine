@@ -1,12 +1,12 @@
-package strategy;
+package strategy.playingStrategy;
 import game.Hand;
 import game.Card;
-public class HiLoStrategy implements Strategy {
+public class HiLoStrategy implements PlayingStrategy {
 
     private int runningCount;
     private int numDecks;
     private int cardsDealt;
-    private Strategy baseStrategy; // MUST CHANGE THIS when i implement betting strategies appart from playing ones [IMPORTANT TO-DO]
+    private PlayingStrategy baseStrategy; // MUST CHANGE THIS when i implement betting strategies appart from playing ones [IMPORTANT TO-DO]
 
     public HiLoStrategy(int numDecks) 
     {
