@@ -1,9 +1,9 @@
-package strategy;
+package strategy.playingStrategy;
 
 import game.Hand;
 import game.Card;
 
-public class BasicStrategy implements Strategy {
+public class BasicStrategy implements PlayingStrategy {
         
     private static final String[][] BasicStratTable = {
         {"h","h","h","h","h","h","h","h","h","h"}, 
