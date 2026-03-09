@@ -112,6 +112,8 @@ public class MonteCarlo {
 
                     simNetProfit += player.getBalance() - prevBalance;
                     simulation.add(simNetProfit);
+                    boolean won = (player.getBalance() > prevBalance);
+                    bettingStrategy.roundResult(won);
                 }    
             }
             netProfitHistory.add(simulation);

@@ -19,5 +19,10 @@ public interface BettingStrategy {
     {
     }
 
+    default void roundResult(boolean win) 
+    {
+    }
+
+
     
 }
