@@ -2,7 +2,7 @@ package strategy.bettingStrategy;
 
 public class Martingale implements BettingStrategy {
 
-    boolean lastRoundWin=true;
+    int lastRoundResult;
     int lastRoundBet;
 
 public int getBet(int baseBet) 
@@ -22,9 +22,9 @@ public int getBet(int baseBet)
     return bet;
 }
 
-    public void roundResult(boolean win) 
+default void roundResult(int result) 
     {
-        this.lastRoundWin=win;
+        this.lastRoundResult=result;
     }
 
 
