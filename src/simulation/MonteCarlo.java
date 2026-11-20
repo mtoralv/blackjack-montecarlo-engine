@@ -1,170 +1,122 @@
 package simulation;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.SplittableRandom;
+import java.util.stream.IntStream;
 
-import game.Game;
-import game.Player;
-import strategy.bettingStrategy.BettingStrategy;
-import strategy.playingStrategy.PlayingStrategy;
+import game.Card;
+import game.CardListener;
+import game.RoundResult;
+import game.Rules;
+import game.Shoe;
+import game.Table;
+import strategy.Strategies;
+import strategy.betting.BettingStrategy;
+import strategy.betting.HiLoStrategy;
+import strategy.playing.PlayingStrategy;
 
-public class MonteCarlo {
+public final class MonteCarlo {
 
-    private int numSimulations;
-    private int handsPerSimulation;
-    private int startingBalance;
-    private int betSize;
-    private PlayingStrategy playingStrategy;
-    private BettingStrategy bettingStrategy;
-    private ArrayList<ArrayList<Integer>> netProfitHistory;
-    private int totalWins;
-    private int totalLosses;
-    private int totalTies;
-    private int totalBlackjacks;
-    private int totalHands;
-    private int totalWagered;
-    private int netProfit;
-    private int totalSurrender;
-    private int totalDoubleDown;
-    private int numDecks;
-
-    public MonteCarlo(int numSimulations, int handsPerSimulation, int startingBalance, int betSize, int numDecks, PlayingStrategy playingStrategy, BettingStrategy bettingStrategy)
-    {
-        this.numSimulations = numSimulations;
-        this.handsPerSimulation = handsPerSimulation;
-        this.startingBalance = startingBalance;
-        this.betSize = betSize;
-        this.numDecks = numDecks;
-        this.playingStrategy = playingStrategy;
-        this.bettingStrategy = bettingStrategy;
-        this.netProfitHistory = new ArrayList<>();
+    private MonteCarlo() {
     }
 
-    public void simulate()
-    {
-        for(int i=0 ; i < numSimulations ; i++)
-        {
+    public static SimulationResult run(SimulationConfig cfg) {
+        long start = System.nanoTime();
+        // one seed per session, so results are the same no matter how many threads run
+        long[] seeds = new SplittableRandom(cfg.seed()).longs(cfg.simulations()).toArray();
 
-            ArrayList<Integer> simulation = new ArrayList<>();
-            Player player = new Player(startingBalance);
-            Game game = new Game(player, numDecks );
-            game.setSilent(true);
-            game.setPlayingStrategy(playingStrategy);
-            game.setBettingStrategy(bettingStrategy);
-            int simNetProfit = 0;
-            simulation.add(0);
-            
-            for(int j=0; j < handsPerSimulation ; j++)
-            {
-            
-                int newBetSize = Math.min(bettingStrategy.getBet(betSize), player.getBalance());
-                game.setBet(newBetSize);
-                
-                if(player.getBalance()==0)
-                {
-                    break;
-                }
-                else
-                {
-                    int prevBalance = player.getBalance();
-                    game.round(); 
+        Stats[] perSession = new Stats[cfg.simulations()];
+        SessionResult[] sessions = new SessionResult[cfg.simulations()];
+        IntStream.range(0, cfg.simulations()).parallel().forEach(i -> {
+            Stats stats = new Stats();
+            sessions[i] = runSession(cfg, seeds[i], stats);
+            perSession[i] = stats;
+        });
 
-                    netProfit += player.getBalance() - prevBalance;
+        Stats total = new Stats();
+        for (Stats s : perSession) total.merge(s); // fixed order to keep sums identical
 
-                    totalHands++;
-                    totalWagered += newBetSize;
-                    if(prevBalance == player.getBalance())
-                    {
-                        totalTies++;
-                    }
-                    else if(player.getBalance() - prevBalance == newBetSize * 3 / 2)
-                    {
-                        totalBlackjacks++;
-                        totalWins++;
-                    }
-                    else if(player.getBalance() == prevBalance - newBetSize/2)
-                    {
-                        totalSurrender++;
-                        totalLosses++;
-                    }
-                    else if(player.getBalance() == prevBalance + newBetSize*2 || player.getBalance() == prevBalance - newBetSize*2)
-                    {
-                        totalWagered += newBetSize;
-                        totalDoubleDown++;
-                        if(prevBalance < player.getBalance())
-                        {
-                            totalWins++;
-                        }
-                        else if( prevBalance > player.getBalance())
-                        {
-                            totalLosses++;
-                        }
-                    }
-                    else if(prevBalance < player.getBalance())
-                    {
-                        totalWins++;
-                    }
-                    else if( prevBalance > player.getBalance())
-                    {
-                        totalLosses++;
-                    }
+        Rules rules = cfg.rules();
+        String playingName = Strategies.playing(cfg.playing(), rules, new SplittableRandom(0)).name();
+        String bettingName = Strategies.betting(cfg.betting(), cfg.spread()).name();
+        double elapsed = (System.nanoTime() - start) / 1e9;
+        return new SimulationResult(cfg, playingName, bettingName, total, List.of(sessions), elapsed);
+    }
 
-                    simNetProfit += player.getBalance() - prevBalance;
-                    simulation.add(simNetProfit);
-                    boolean won = (player.getBalance() > prevBalance);
-                    bettingStrategy.roundResult(won);
-                }    
+    static SessionResult runSession(SimulationConfig cfg, long seed, Stats stats) {
+        Rules rules = cfg.rules();
+        SplittableRandom rng = new SplittableRandom(seed);
+        Table table = new Table(rules, new Shoe(rules.decks(), rules.penetration(), rng.split()));
+        PlayingStrategy player = Strategies.playing(cfg.playing(), rules, rng.split());
+        BettingStrategy betting = Strategies.betting(cfg.betting(), cfg.spread());
+        betting.reset(rules);
+
+        // extra counter just to log the true count of each hand for the stats
+        HiLoStrategy counter = new HiLoStrategy(1);
+        counter.reset(rules);
+        CardListener listeners = new CardListener() {
+            @Override
+            public void onCard(Card card) {
+                betting.onCard(card);
+                counter.onCard(card);
             }
-            netProfitHistory.add(simulation);
-        }
-    }
 
-    public ArrayList<ArrayList<Integer>> getnetProfitHistory()
-    {
-        return netProfitHistory;
-    }
-    
-    public void printResults()
-    {
-        double houseEdge = -(double) netProfit / totalWagered * 100;
-        double winRate = (double) totalWins / totalHands * 100;
-
-        System.out.println("Total hands: " + this.totalHands);
-        System.out.println("Total wins: " + this.totalWins);
-        System.out.println("Total looses: " + this.totalLosses);
-        System.out.println("Total ties: " + this.totalTies);
-        System.out.println("Total blackjacks: " + this.totalBlackjacks);
-        System.out.println("Total surrender: " + this.totalSurrender);
-        System.out.println("Total double down: " + this.totalDoubleDown);
-        System.out.printf("Win rate: %.3f%%%n", winRate);
-        System.out.printf("House edge: %.3f%%%n", houseEdge);
-
-    }
-
-    public int getNumDecks()
-    {
-        return numDecks;
-    }
-    
-
-    public void exportCSV() {
-    try {
-        FileWriter writer = new FileWriter("CSVresults/" + playingStrategy.getName() + "+" + bettingStrategy.getName() + "_exportedCSV.csv");
-        
-        for (int i = 0; i < getnetProfitHistory().size(); i++) {
-            for (int j = 0; j < getnetProfitHistory().get(i).size(); j++) {
-                writer.write(getnetProfitHistory().get(i).get(j) + ",");
+            @Override
+            public void onShuffle() {
+                betting.onShuffle();
+                counter.onShuffle();
             }
-            writer.write("\n");
+        };
+
+        double unit = cfg.unit();
+        double tableMax = cfg.tableMaxUnits() * unit;
+        double balance = cfg.bankroll();
+        double net = 0;
+        double peak = 0;
+        double maxDrawdown = 0;
+        boolean ruined = false;
+        int played = 0;
+        float[] trajectory = new float[cfg.handsPerSimulation() / cfg.sampleEvery() + 1];
+
+        for (int h = 0; h < cfg.handsPerSimulation(); h++) {
+            if (balance < unit) {
+                ruined = true;
+                break;
+            }
+            table.shuffleIfNeeded(listeners); // shuffle before betting, like at a real table
+            double trueCount = counter.trueCount();
+            double bet = Math.min(Math.max(betting.nextBet(unit), unit), tableMax);
+            bet = Math.min(bet, balance);
+
+            RoundResult result = table.playRound(bet, balance, player, listeners);
+            betting.onRoundEnd(bet, result.net());
+            stats.record(result, trueCount);
+
+            balance += result.net();
+            net += result.net();
+            played++;
+            peak = Math.max(peak, net);
+            maxDrawdown = Math.max(maxDrawdown, peak - net);
+            if (played % cfg.sampleEvery() == 0) {
+                trajectory[played / cfg.sampleEvery()] = (float) net;
+            }
         }
-
-        writer.close();
-        System.out.println("Successfully wrote to the file.");
-    } catch (IOException e) {
-        System.out.println("An error occurred.");
-        e.printStackTrace();
+        if (ruined || played < cfg.handsPerSimulation()) {
+            int from = played / cfg.sampleEvery() + 1;
+            if (from < trajectory.length) Arrays.fill(trajectory, from, trajectory.length, (float) net);
+        }
+        return new SessionResult(net, played, ruined, maxDrawdown, trajectory);
     }
-}
 
+    public static List<SimulationResult> runAll(List<SimulationConfig> configs, boolean verbose) {
+        List<SimulationResult> results = new ArrayList<>();
+        for (SimulationConfig cfg : configs) {
+            SimulationResult r = run(cfg);
+            if (verbose) Report.printRow(r);
+            results.add(r);
+        }
+        return results;
+    }
 }

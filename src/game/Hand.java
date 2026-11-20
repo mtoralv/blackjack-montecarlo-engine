@@ -1,109 +1,86 @@
 package game;
 
 import java.util.ArrayList;
-import util.Colors;
+import java.util.Collections;
+import java.util.List;
 
-public class Hand {
-    
-    private ArrayList<Card> hand = new ArrayList<>();
+public final class Hand {
 
-    public Hand()
-    {
+    private final List<Card> cards = new ArrayList<>(6);
+    private int hardTotal; // aces counted as 1, total() turns one into 11 if it fits
+    private int aces;
+    private boolean fromSplit;
+
+    public Hand() {
     }
 
-    public void addCard(Card card)
-    {
+    static Hand splitFrom(Card card) {
+        Hand hand = new Hand();
+        hand.fromSplit = true;
         hand.add(card);
+        return hand;
     }
 
-    public int getSize()
-    {
-        return hand.size();
-    }
-
-    public int getTotal()
-    {
-        int totalVal = 0;
-        int ace = 0;
-        for( int i=0; i<hand.size(); i++)
-        {
-            if(hand.get(i).getValue()==11)
-            {
-                ace++;
-            }
-            totalVal+=hand.get(i).getValue();
+    public void add(Card card) {
+        cards.add(card);
+        if (card.isAce()) {
+            aces++;
+            hardTotal += 1;
+        } else {
+            hardTotal += card.value();
         }
-        while(ace>0 && totalVal>21)
-        {
-            ace--;
-            totalVal-=10;
+    }
+
+    Card removeSecond() {
+        Card card = cards.remove(1);
+        if (card.isAce()) {
+            aces--;
+            hardTotal -= 1;
+        } else {
+            hardTotal -= card.value();
         }
-        return totalVal;
+        fromSplit = true;
+        return card;
     }
 
-    public boolean isBust()
-    {
-        return (getTotal()>21);
+    public int total() {
+        return isSoft() ? hardTotal + 10 : hardTotal;
     }
 
-    public String toString()
-    {
-        String mainString = "     ";
-
-        if(hand.isEmpty())
-        {
-            mainString = "Empty Hand!";
-        }
-        else{         
-            for(int i = 0; i<hand.size(); i++)
-            {
-                mainString+= hand.get(i).toString();
-            }
-            mainString+= "  |  " + Colors.RED + getTotal() + Colors.RESET;
-        }
-        
-        return mainString;
+    public boolean isSoft() {
+        return aces > 0 && hardTotal + 10 <= 21;
     }
 
-    public boolean isSoft()
-    {
-        int totalVal = 0;
-        int ace = 0;
-        for( int i=0; i<hand.size(); i++)
-        {
-            if(hand.get(i).getValue()==11)
-            {
-                ace++;
-            }
-            totalVal+=hand.get(i).getValue();
-        }
-        while(ace>0 && totalVal>21)
-        {
-            ace--;
-            totalVal-=10;
-        }
-        return (ace > 0);
+    public boolean isBust() {
+        return hardTotal > 21;
     }
 
-    public void resetHand()
-    {
-        hand.clear();
+    public boolean isBlackjack() {
+        return cards.size() == 2 && !fromSplit && total() == 21;
     }
 
-    public boolean isBlackjack()
-    {
-        return(hand.size()==2 && this.getTotal()==21);
-    }
-    
-    public Card getFirstCard()
-    {
-        return hand.getFirst();
+    public boolean isPair() {
+        return cards.size() == 2 && cards.get(0).value() == cards.get(1).value();
     }
 
-    public Card getCard(int i)
-    {
-        return (hand.get(i));
+    public boolean isFromSplit() {
+        return fromSplit;
     }
 
+    public int size() {
+        return cards.size();
+    }
 
+    public Card card(int index) {
+        return cards.get(index);
+    }
+
+    public List<Card> cards() {
+        return Collections.unmodifiableList(cards);
+    }
+
+    @Override
+    public String toString() {
+        return cards + " (" + (isSoft() ? "soft " : "") + total() + ")";
+    }
 }

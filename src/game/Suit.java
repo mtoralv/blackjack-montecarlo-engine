@@ -1,17 +1,21 @@
 package game;
 
-enum Suit {
-    Hearts("H"), Diamonds("D"), Clubs("C"), Spades("S");
+public enum Suit {
+    HEARTS("H", true), DIAMONDS("D", true), CLUBS("C", false), SPADES("S", false);
 
-    private String suit;
-    Suit(String suit)
-    {
-        this.suit = suit;
+    private final String symbol;
+    private final boolean red;
+
+    Suit(String symbol, boolean red) {
+        this.symbol = symbol;
+        this.red = red;
     }
 
-    public String getSuit() 
-    {
-        return suit;
+    public String symbol() {
+        return symbol;
+    }
+
+    public boolean isRed() {
+        return red;
     }
 }
-
