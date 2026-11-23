@@ -8,16 +8,16 @@ setlocal
 cd /d "%~dp0"
 if exist bin rmdir /s /q bin
 mkdir bin
-dir /s /b src\*.java > bin\sources.txt
-javac --release 21 -d bin @bin\sources.txt
+javac --release 21 -d bin -sourcepath src src\Main.java
 if errorlevel 1 (
     echo Compilation failed.
     exit /b 1
 )
 if /i "%~1"=="test" (
-    javac --release 21 -cp bin -d bin test\*.java
+    javac --release 21 -d bin -sourcepath src test\EngineTests.java
     if errorlevel 1 exit /b 1
     java -cp bin EngineTests
-    exit /b %errorlevel%
+    if errorlevel 1 exit /b 1
+    exit /b 0
 )
 java -Dstdout.encoding=UTF-8 -cp bin Main %*

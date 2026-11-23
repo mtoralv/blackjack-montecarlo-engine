@@ -8,10 +8,10 @@ set -e
 cd "$(dirname "$0")"
 rm -rf bin
 mkdir -p bin
-javac --release 21 -d bin $(find src -name '*.java')
+javac --release 21 -d bin -sourcepath src src/Main.java
 
 if [ "$1" = "test" ]; then
-    javac --release 21 -cp bin -d bin test/*.java
+    javac --release 21 -d bin -sourcepath src test/EngineTests.java
     exec java -cp bin EngineTests
 fi
 exec java -cp bin Main "$@"
